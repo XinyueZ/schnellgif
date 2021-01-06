@@ -27,14 +27,27 @@ private fun Application.init(main: () -> Unit) {
     main()
 }
 
+private fun Application.parameterInfo() =
+    mapOf("OK" to "The parameters require [num] <= 10, [page] >= 0.")
+
 fun Application.main() {
     init {
         val vm = GifListViewModel(GifRepositoryImpl(client))
         routing {
             get("/") {
+                val num = call.request.queryParameters["num"]?.toInt()
+                val page = call.request.queryParameters["page"]?.toInt()
+
                 call.respond(
                     HttpStatusCode.OK,
-                    vm.getGifList(),
+                    if (num != null && page != null && num <= 10 && page >= 0) {
+                        vm.getGifList(
+                            num = num,
+                            page = page
+                        )
+                    } else {
+                        parameterInfo()
+                    }
                 )
             }
         }
