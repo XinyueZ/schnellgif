@@ -13,7 +13,7 @@ data class GifDataEntity(
         infix fun from(data: GifData) = GifDataEntity(
             data.shortName,
             data.shortIntro,
-            data.imgUrl.trimStart('/').trimStart('/'),
+            data.imgUrl,
         )
     }
 }
